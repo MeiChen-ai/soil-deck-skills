@@ -18,7 +18,7 @@ description: >
 以李俊儀教授的 SOIL 教學心法為基礎的教學簡報工作流。
 六顆引擎、一條清楚的路徑：先想清楚教什麼，再安排怎麼教，最後才處理怎麼呈現。
 
-> 完整理論參考：讀取 [references/soil-theory.md](references/soil-theory.md)
+> 理論摘要：SOIL 六顆引擎依序為 **概念定位**（教什麼、核心概念是什麼）→ **脈絡定位**（學生在哪、為何要學）→ **頁面架構**（每頁扮演什麼角色）→ **認知編修**（降低認知負荷、一頁一訊息）→ **風格建構**（字級、配色、視覺一致）→ **輸出**（生成 .pptx 並做 QA）。本文件各章即依此六引擎展開，不需另讀外部理論檔。
 
 ---
 
@@ -467,14 +467,27 @@ image_policy:
 
 用 PptxGenJS 生成完整 .pptx。
 
-**技術執行：讀取 pptx 技能的技術文件**
+**技術執行：PptxGenJS 參考來源**
 
-```bash
-# 讀取 PptxGenJS 完整 API 指南
-cat /sessions/focused-exciting-heisenberg/mnt/.claude/skills/pptx/pptxgenjs.md
+若目前環境有安裝 `pptx` 技能（技能目錄下有 `pptx/pptxgenjs.md`），先讀該檔取得完整 API；若沒有，直接依下列最小速查撰寫即可：
+
+```javascript
+const pptxgen = require("pptxgenjs");
+const pptx = new pptxgen();
+pptx.layout = "LAYOUT_WIDE";                       // 16:9，13.333" × 7.5"
+const slide = pptx.addSlide();
+slide.background = { color: "0D1B2A" };            // 頁面底色（hex 不加 #）
+slide.addText("標題", { x: 0.6, y: 0.5, w: 12, h: 1.2, fontSize: 48, bold: true, color: "FFFFFF", fontFace: "Microsoft JhengHei" });
+slide.addText([{ text: "重點一", options: { bullet: true } }, { text: "重點二", options: { bullet: true } }],
+  { x: 0.6, y: 2, w: 6, h: 3, fontSize: 20, color: "FFFFFF", lineSpacingMultiple: 1.2 });
+slide.addShape(pptx.ShapeType.rect, { x: 7, y: 2, w: 5.5, h: 3, fill: { color: "00C6FF" }, line: { color: "FFD700", width: 1 } });
+slide.addTable([["術語", "定義"], ["SOIL", "六引擎工作流"]],
+  { x: 0.6, y: 5.2, w: 12, colW: [3, 9], fontSize: 16, border: { type: "solid", color: "FFFFFF", pt: 1 }, fill: { color: "1B263B" } });
+slide.addImage({ data: "image/png;base64,....", x: 0.4, y: 1.5, w: 4.2, h: 3.2, sizing: { type: "contain", w: 4.2, h: 3.2 } });
+pptx.writeFile({ fileName: "output.pptx" });       // 寫到當前工作目錄
 ```
 
-遵循 pptx 技能中的技術規範，並套用林長揚 #1 文字比例（55/34/21/13），升級到海報級字重：
+套用林長揚 #1 文字比例（55/34/21/13），升級到海報級字重：
 
 **字級標準（林長揚 #1 對應）**
 
@@ -529,13 +542,24 @@ cat /sessions/focused-exciting-heisenberg/mnt/.claude/skills/pptx/pptxgenjs.md
 >
 > 不要先生成骨架再後處理插圖。base64 嵌入的方式讓位置控制更精準，且不需要 python-pptx 後處理。
 
-#### G-1：安裝依賴與確認腳本位置
+#### G-1：判斷幾何圖來源（技能優先，原生形狀備援）
+
+- **若已安裝 `jh-math-geometry` 技能**（技能目錄下找得到 `jh-math-geometry/scripts/geometry_renderer.py`）→ 依 G-2～G-4 用該渲染器生成 PNG，再嵌入 PptxGenJS。
+- **若未安裝** → 跳過 G-2～G-4，直接用 PptxGenJS 原生形狀繪圖（`addShape` 的 `line`／`rect`／`ellipse`／`triangle`，標籤用 `addText`），見 G-5 末的備援範例。
+
+所有中間產物（spec、PNG、base64）一律放在**當前工作目錄**下的 `geo_out/`，不寫到家目錄或系統暫存區。
 
 ```bash
-pip install cairosvg Pillow --break-system-packages -q
+pip install cairosvg Pillow -q
 
-GEOM_RENDERER="/mnt/skills/user/jh-math-geometry/scripts/geometry_renderer.py"
-echo "幾何渲染器：$GEOM_RENDERER"
+# 依環境常見的技能根目錄尋找渲染器（找不到就走原生形狀備援）
+GEOM_RENDERER="$(find ~/.claude/skills ~/.codex/skills ~/.agents/skills \
+  -path '*/jh-math-geometry/scripts/geometry_renderer.py' 2>/dev/null | head -1)"
+if [ -n "$GEOM_RENDERER" ]; then
+  echo "幾何渲染器：$GEOM_RENDERER"; export GEOM_RENDERER
+else
+  echo "未安裝 jh-math-geometry，改用 PptxGenJS 原生形狀（跳到 G-5 備援）"
+fi
 ```
 
 #### G-2：生成標準幾何圖形（使用 geometry_renderer.py）
@@ -543,9 +567,9 @@ echo "幾何渲染器：$GEOM_RENDERER"
 針對引擎三標記的每個 `geometry` 欄位，建立對應的圖形規格 JSON，然後批次渲染：
 
 ```bash
-mkdir -p /home/claude/geo_out
+mkdir -p geo_out
 
-cat > /home/claude/geo_spec.json << 'SPEC'
+cat > geo_spec.json << 'SPEC'
 {
   "figures": [
     {
@@ -563,29 +587,30 @@ cat > /home/claude/geo_spec.json << 'SPEC'
 }
 SPEC
 
-python3 "$GEOM_RENDERER" /home/claude/geo_spec.json /home/claude/geo_out/
-ls /home/claude/geo_out/*.png
+python3 "$GEOM_RENDERER" geo_spec.json geo_out/
+ls geo_out/*.png
 ```
 
-> **視覺確認**：用 `view` 工具逐一查看生成的 `.png`，確認圖形標籤、角弧、等邊記號均正確。如有問題，調整 spec 重新生成，**不要繼續到下一步**。
+> **視覺確認**：逐一查看生成的 `.png`，確認圖形標籤、角弧、等邊記號均正確。如有問題，調整 spec 重新生成，**不要繼續到下一步**。
 
 #### G-3：生成自訂幾何圖形（geometry_renderer.py 不支援的圖形）
 
 當需要「兩直線相交」、「帶延長線的外角圖」、「多角標色」等 renderer 不直接支援的圖形時，用 Python 直接呼叫 `SVGCanvas` 手繪：
 
 ```python
-# /home/claude/geo_custom.py
-import math, sys
-sys.path.insert(0, '/mnt/skills/user/jh-math-geometry/scripts')
+# geo_custom.py（存於當前工作目錄）
+import math, os, sys
+sys.path.insert(0, os.path.dirname(os.environ["GEOM_RENDERER"]))  # G-1 找到的渲染器所在目錄
 from geometry_renderer import SVGCanvas
 import cairosvg
 from pathlib import Path
 
-OUT = Path("/home/claude/geo_out")
+OUT = Path("geo_out")
+OUT.mkdir(exist_ok=True)
 
 def save(c, name):
     svg = c.render()
-    (OUT / f"{name}.svg").write_text(svg)
+    (OUT / f"{name}.svg").write_text(svg, encoding="utf-8")
     cairosvg.svg2png(bytestring=svg.encode(),
                      write_to=str(OUT / f"{name}.png"), dpi=150)
     print(f"✅ {name}")
@@ -617,7 +642,7 @@ make_vertical_angles()
 ```
 
 ```bash
-python3 /home/claude/geo_custom.py
+python3 geo_custom.py
 ```
 
 **常用自訂圖形模板（直接複製修改）：**
@@ -632,11 +657,11 @@ python3 /home/claude/geo_custom.py
 #### G-4：轉換為 base64，供 PptxGenJS 使用
 
 ```python
-# /home/claude/geo_to_b64.py
+# geo_to_b64.py（存於當前工作目錄）
 import base64, json
 from pathlib import Path
 
-geo_dir = Path("/home/claude/geo_out")
+geo_dir = Path("geo_out")
 # 列出所有需要嵌入的圖形 id（對應引擎三 geometry 標記的 id）
 figure_ids = [
     "slide_N_figX",       # 替換為實際的 figure id
@@ -652,13 +677,13 @@ for fid in figure_ids:
     else:
         print(f"⚠️  找不到 {png}")
 
-with open('/home/claude/geo_b64.json', 'w') as f:
+with open('geo_b64.json', 'w', encoding='utf-8') as f:
     json.dump(result, f)
-print("完成：/home/claude/geo_b64.json")
+print("完成：geo_b64.json（當前工作目錄）")
 ```
 
 ```bash
-python3 /home/claude/geo_to_b64.py
+python3 geo_to_b64.py
 ```
 
 #### G-5：在 PptxGenJS 腳本中嵌入幾何圖
@@ -670,7 +695,7 @@ const pptxgen = require("pptxgenjs");
 const fs = require("fs");
 
 // ── 讀取所有幾何圖形 ─────────────────────────────────────
-const geo = JSON.parse(fs.readFileSync('/home/claude/geo_b64.json', 'utf8'));
+const geo = JSON.parse(fs.readFileSync('geo_b64.json', 'utf8'));  // 當前工作目錄
 
 // ...（其他設定）
 
@@ -684,6 +709,18 @@ slide.addImage({
   h: 3.2,   // 圖片顯示高度（英吋）
   sizing: { type: "contain", w: 4.2, h: 3.2 }
 });
+```
+
+**備援：未安裝 jh-math-geometry 時，用 PptxGenJS 原生形狀畫圖**
+
+```javascript
+// 範例：直角三角形 ABC（原生形狀，不需任何外部渲染器）
+const L = { color: "FFFFFF", width: 2 };
+slide.addShape(pptx.ShapeType.rtTriangle, { x: 0.8, y: 1.8, w: 3.6, h: 2.7, line: L, fill: { color: "1B263B" } });
+slide.addText("A", { x: 0.5, y: 4.4, w: 0.4, h: 0.4, fontSize: 18, color: "FFD700", bold: true });
+slide.addText("B", { x: 4.4, y: 4.4, w: 0.4, h: 0.4, fontSize: 18, color: "FFD700", bold: true });
+slide.addText("C", { x: 0.5, y: 1.5, w: 0.4, h: 0.4, fontSize: 18, color: "FFD700", bold: true });
+// 圓、線段、矩形：pptx.ShapeType.ellipse / line / rect；虛線：line: { dashType: "dash" }
 ```
 
 **位置對照參考（LAYOUT_16x9，10" × 5.625"）：**
@@ -703,11 +740,14 @@ slide.addImage({
 >
 > **順序：批次生圖 → 視覺確認 → 嵌入 pptx**
 >
-> 本子流程使用使用者已安裝的 `draw` skill（gpt-image-2），腳本路徑：`~/.claude/skills/draw/draw.py`
+> 生圖工具依執行環境**三段式**選擇，不要卡在某一種：
+> 1. **ChatGPT App／Codex** → 直接用內建 **imagegen**（不需 API Key），依下表 size/quality 生成後存成 `slides/images/<name>_<時間戳>.png`。
+> 2. **Claude Code** → 若存在 `~/.claude/skills/draw/draw.py`（gpt-image-2，需 `OPENAI_API_KEY`）則用它，指令見 I-1。
+> 3. **兩者都沒有** → **不生圖**，改用 PptxGenJS 原生色塊／形狀／emoji 佔位（見 I-1 末的備援），其餘流程照常進行。
 
 ### role 對應的生圖與嵌入規則
 
-| role | draw.py 參數 | pptx 嵌入 |
+| role | 生圖參數（imagegen／draw.py 通用） | pptx 嵌入 |
 |------|------------|-----------|
 | `illustration` | size=`1024x1024`, quality=`low` | x=5.1, y=1.5, w=4.5, h=4.0 |
 | `background` | size=`1536x1024`, quality=`low` 或 `medium` | 全版 `(0,0,13.333,7.5)` |
@@ -718,9 +758,9 @@ slide.addImage({
 
 **background / section_divider 的提示詞要求**：必須強制 negative「不要任何文字」，並指定留白區（例如「左側 40% 為純深色色塊供文字疊加」），否則會造成文字疊在插畫主體上可讀性差。
 
-#### I-1：批次生成 AI 視覺素材（使用 draw.py）
+#### I-1：批次生成 AI 視覺素材
 
-針對引擎三標記的每個 `visuals` 條目（或舊版 `illustration`），**合併 `image_policy.style_tokens` 與該 visual 的 `prompt`**，依 role 對應表決定 size/quality，逐張呼叫 `draw.py`。
+針對引擎三標記的每個 `visuals` 條目（或舊版 `illustration`），**合併 `image_policy.style_tokens` 與該 visual 的 `prompt`**，依 role 對應表決定 size/quality，逐張生成（Codex 用內建 imagegen；Claude Code 用 draw.py）。
 
 合併規則：
 
@@ -728,10 +768,11 @@ slide.addImage({
 最終 prompt = "{page_prompt}，{style_tokens}，{negative}"
 ```
 
-範例批次指令（Windows bash / Git Bash）：
+範例批次指令（Claude Code 環境、有 draw.py 時；Codex／ChatGPT App 改以內建 imagegen 逐張生成並用相同檔名存檔）：
 
 ```bash
 mkdir -p slides/images
+[ -f ~/.claude/skills/draw/draw.py ] || echo "沒有 draw.py：改用內建 imagegen，或走原生色塊備援"
 
 # 以引擎五的 image_policy 為基底
 STYLE="扁平向量插畫、深夜藍#0D1B2A背景、亮青藍#00C6FF線條、金黃#FFD700點綴、教室或數位科技情境"
@@ -748,8 +789,10 @@ $DRAW "一張發光的火箭向上飛，象徵學習突破，${STYLE}，${NEG}" 
 ls slides/images/*.png
 ```
 
-> **成本估算**：low 品質一張約 NT$0.3；一份 10 頁簡報若 4 頁有插畫，約 NT$1.2。
+> **成本估算**（draw.py 路徑）：low 品質一張約 NT$0.3；一份 10 頁簡報若 4 頁有插畫，約 NT$1.2。Codex 內建 imagegen 不另計 API 費用。
 > **並行加速**：若張數多（>5），可把多個 `$DRAW ... &` 用 `&` 背景啟動後 `wait`，能省一半時間。
+
+**備援：沒有任何生圖工具時**——不生圖、不中斷。把該 visual 的位置改成 PptxGenJS 原生元素：`background`／`section_divider` 用全版 `addShape(rect)` 色塊＋第二層半透明矩形做層次；`illustration`／`hero`／`accent` 用一個圓角矩形（`roundRect`）＋大號 emoji（`addText("📐", { fontSize: 96 })`）當視覺錨點。跳過 I-2、I-3，`illus_b64.json` 留空物件 `{}` 即可。
 
 #### I-2：視覺確認（必做）
 
@@ -774,7 +817,7 @@ img_dir = Path("slides/images")
 result = {}
 
 # 對每個 illustration id（對應引擎三標記），找最新生成的 PNG
-# draw.py 輸出檔名格式：<name>_<YYYYMMDD_HHMMSS>.png
+# 檔名格式：<name>_<YYYYMMDD_HHMMSS>.png（draw.py 預設；內建 imagegen 存檔時請沿用同樣命名）
 illus_ids = [
     "slide_3_illus1",
     "slide_10_illus1",
@@ -884,8 +927,8 @@ slide.addImage({
 # 文字內容檢查
 python -m markitdown output.pptx
 
-# 轉成圖片逐頁檢查
-python /sessions/focused-exciting-heisenberg/mnt/.claude/skills/pptx/scripts/office/soffice.py --headless --convert-to pdf output.pptx
+# 轉成圖片逐頁檢查（需本機有 LibreOffice；若環境有 pptx 技能，也可改用其 scripts/office/soffice.py）
+soffice --headless --convert-to pdf output.pptx
 rm -f slide-*.jpg
 pdftoppm -jpeg -r 150 output.pdf slide
 ls -1 "$PWD"/slide-*.jpg
@@ -1033,27 +1076,25 @@ python -m markitdown input.pptx
 
 ## 依賴
 
-本技能在生成 .pptx 時，需要讀取 pptx 技能的技術文件：
+**必要**：Node.js + `pptxgenjs`（唯一硬性依賴）。所有產出（.pptx、中間 JSON、圖片）都寫在**當前工作目錄**。
 
-- `pptx/pptxgenjs.md` — PptxGenJS 完整 API（建立新簡報）
+**可選：pptx 技能**（有就讀，沒有就用引擎六內嵌的 PptxGenJS 最小速查）：
+- `pptx/pptxgenjs.md` — PptxGenJS 完整 API
 - `pptx/editing.md` — 編輯現有 .pptx 的流程
 - `pptx/scripts/` — 轉換與檢查工具
 
-本技能在生成幾何圖形時，需要的腳本（已內建，無需呼叫外部技能）：
-- `/mnt/skills/user/jh-math-geometry/scripts/geometry_renderer.py` — SVG 渲染引擎
-- `/mnt/skills/user/jh-math-geometry/scripts/insert_to_pptx.py` — 插入 PPTX 工具
+**可選：jh-math-geometry 技能**（幾何圖用；未安裝則改用 PptxGenJS 原生形狀，見 G-1／G-5）：
+- `jh-math-geometry/scripts/geometry_renderer.py` — SVG 渲染引擎
 - 圖形參數速查 → 見下方「幾何圖形參數速查（內嵌）」章節，無需讀取外部檔案
 
-本技能在生成 AI 插畫時，依賴使用者的 **draw skill**：
-- 腳本：`~/.claude/skills/draw/draw.py`
-- 模型：OpenAI **gpt-image-2**
-- 前置：`OPENAI_API_KEY` 已設在 shell、`.env`、或 `~/.openai.env`；OpenAI 組織已完成 Individual 驗證
-- 成本：low 約 NT$0.3/張、medium 約 NT$1.3/張、high 約 NT$5.5/張（預設用 low）
+**可選：生圖工具**（三段式，見 AI 視覺素材子流程）：
+- ChatGPT App／Codex → 內建 imagegen，不需 API Key
+- Claude Code → `~/.claude/skills/draw/draw.py`（gpt-image-2；需 `OPENAI_API_KEY`；成本 low 約 NT$0.3/張、medium 約 NT$1.3/張、high 約 NT$5.5/張，預設 low）
+- 都沒有 → 不生圖，PptxGenJS 原生色塊佔位
 
 ```bash
 # 需要的套件
-pip install "markitdown[pptx]" --break-system-packages
-pip install Pillow cairosvg python-pptx openai --break-system-packages
+pip install "markitdown[pptx]" Pillow cairosvg python-pptx   # 依環境需要時加 --break-system-packages
 npm install -g pptxgenjs
 ```
 
