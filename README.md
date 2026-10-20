@@ -51,7 +51,7 @@ flowchart LR
 
 你**完全不需要自己開終端機找資料夾路徑**！只要打開你正在使用的 AI Agent（**Google Antigravity** 或 **OpenCode**），複製下方對應的一段話貼進對話框，AI 就會自動幫你把 3 個技能全部安裝好。
 
-#### 💬 方法 A（最推薦）：複製貼給 AI Agent 自動安裝
+#### 💬 複製貼給 AI Agent 自動安裝
 
 ##### 選項 1：通用一鍵安裝指令（同時安裝到 Antigravity、OpenCode、Claude Code 與 Codex）
 直接複製以下**整段話**貼給你的 **Antigravity** 或 **OpenCode**：
@@ -67,24 +67,6 @@ flowchart LR
 ##### 選項 3：如果你只用 OpenCode
 ```text
 請幫我把 https://github.com/MeiChen-ai/soil-deck-skills.git 完整 clone 下來，並將 skills/ 底下的 soil-teaching-deck、soil-html-deck、soil-image-deck 三個完整資料夾同時複製到我的 ~/.config/opencode/skills/ 與 ~/.agents/skills/ 目錄下（若資料夾不存在請自動建立），確認裡面的 SKILL.md、references/、scripts/ 與 assets/ 都完整保留。
-```
-
----
-
-#### 💻 方法 B：使用終端機一鍵安裝腳本（進階選用）
-
-如果你想自己在終端機執行指令安裝：
-
-**Windows (PowerShell)：**
-```powershell
-git clone https://github.com/MeiChen-ai/soil-deck-skills.git
-powershell -ExecutionPolicy Bypass -File .\soil-deck-skills\install\install.ps1
-```
-
-**macOS / Linux (Bash)：**
-```bash
-git clone https://github.com/MeiChen-ai/soil-deck-skills.git
-bash ./soil-deck-skills/install/install.sh
 ```
 
 ---
@@ -203,7 +185,7 @@ Installing this repository gives your AI Agent **3 specialized SOIL presentation
 
 You do **not** need to manually locate any hidden folders! Just open your AI Agent (**Google Antigravity** or **OpenCode**), copy one of the blocks below, and paste it directly into the chat box.
 
-#### 💬 Method A (Recommended): Copy & Paste One Prompt to Your AI Agent
+#### 💬 Copy & Paste One Prompt to Your AI Agent
 
 ##### Option 1: Universal Install Prompt (Installs to Antigravity, OpenCode, Claude Code & Codex at Once)
 Copy and paste this entire block into **Antigravity** or **OpenCode**:
@@ -219,22 +201,6 @@ Please clone https://github.com/MeiChen-ai/soil-deck-skills.git and copy the thr
 ##### Option 3: OpenCode Only
 ```text
 Please clone https://github.com/MeiChen-ai/soil-deck-skills.git and copy the three skill folders (`soil-teaching-deck`, `soil-html-deck`, and `soil-image-deck`) from `skills/` into both `~/.config/opencode/skills/` and `~/.agents/skills/` (create the directories if they do not exist), preserving all `SKILL.md`, `references/`, `scripts/`, and `assets/` subdirectories.
-```
-
----
-
-#### 💻 Method B: One-Click Terminal Installer Script (Optional)
-
-**Windows (PowerShell):**
-```powershell
-git clone https://github.com/MeiChen-ai/soil-deck-skills.git
-powershell -ExecutionPolicy Bypass -File .\soil-deck-skills\install\install.ps1
-```
-
-**macOS / Linux (Bash):**
-```bash
-git clone https://github.com/MeiChen-ai/soil-deck-skills.git
-bash ./soil-deck-skills/install/install.sh
 ```
 
 ---
