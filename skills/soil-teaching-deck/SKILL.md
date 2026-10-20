@@ -1,22 +1,25 @@
 ---
 name: soil-teaching-deck
 description: >
-  SOIL 教學簡報工作流技能。以李俊儀教授的 SOIL Teaching Deck Workflow 六顆引擎為核心，
-  引導使用者從素材或主題出發，經過概念定位、脈絡定位、頁面架構、認知編修、風格建構，
-  最終產出一份有教學力的 .pptx 簡報。
+  SOIL 教學簡報工作流技能（SOIL Teaching Deck Workflow for editable .pptx presentations）。
+  以李俊儀教授的 SOIL Teaching Deck Workflow 六顆引擎為核心，
+  引導使用者從素材或主題出發，經過概念定位（Concept Positioning）、脈絡定位（Context Positioning）、
+  頁面架構（Page Architecture）、認知編修（Cognitive Editing）、風格建構（Style Construction），
+  最終產出一份有教學力的可編輯 .pptx 簡報。
   當使用者說「幫我做教學簡報」、「做一份上課用的投影片」、「幫我把教材做成簡報」、
   「這份簡報哪裡可以改」、「幫我分析這份教材的教學重點」、「用 SOIL 做簡報」、
-  「幫我設計教學投影片」或任何涉及教學目的之簡報製作請求時，請一定要使用此技能。
-  即使使用者只說「做簡報」但內容明顯是教學性質（如課程內容、學生學習、教材轉化），
-  也應優先使用此技能而非一般簡報技能。
-  此技能也處理教學簡報的診斷與改善：當使用者上傳現有簡報並詢問「哪裡可以改」、
-  「幫我檢查這份簡報」、「這份投影片的認知負荷太高」時，同樣使用此技能。
+  「幫我設計教學投影片」，或英文請求如 "build a teaching PPTX", "create teaching slides with SOIL",
+  "turn this lesson material into a PowerPoint", "diagnose/improve my existing .pptx slides" 等任何涉及教學目的之可編輯簡報製作或診斷請求時，請一定要使用此技能。
 ---
 
 # SOIL Teaching Deck Workflow
 
 以李俊儀教授的 SOIL 教學心法為基礎的教學簡報工作流。
 六顆引擎、一條清楚的路徑：先想清楚教什麼，再安排怎麼教，最後才處理怎麼呈現。
+
+> 🌐 **Language Rule（雙語互動原則）**：
+> - 若使用者以**中文**提問，請全程使用**繁體中文**與使用者互動及產出各引擎規劃稿（投影片內容語言則依學科／英語教學需求而定）。
+> - If the user prompts in **English**, conduct all interactive questions and Engine 1–6 planning summaries in **English** while following the exact same 6-engine workflow below.
 
 > 理論摘要：SOIL 六顆引擎依序為 **概念定位**（教什麼、核心概念是什麼）→ **脈絡定位**（學生在哪、為何要學）→ **頁面架構**（每頁扮演什麼角色）→ **認知編修**（降低認知負荷、一頁一訊息）→ **風格建構**（字級、配色、視覺一致）→ **輸出**（生成 .pptx 並做 QA）。本文件各章即依此六引擎展開，不需另讀外部理論檔。
 

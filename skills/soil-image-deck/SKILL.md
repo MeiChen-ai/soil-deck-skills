@@ -1,6 +1,6 @@
 ---
 name: soil-image-deck
-description: Create SOIL-style image-first teaching presentations in which every slide is driven by an AI-generated full-page visual. Use when the user asks for a SOIL image deck, pure-image teaching slides, NotebookLM-style educational slides, a YAML-driven SOIL deck, visual-impact teacher training slides, or a baked/plate PPTX that follows 引起動機、維持注意、喚起行動 and the SOIL six-engine workflow.
+description: Create SOIL-style image-first teaching presentations in which every slide is driven by an AI-generated full-page visual (SOIL 全圖片／底圖視覺教學簡報技能，產出 NotebookLM 風格全版視覺 .pptx). Use when the user asks for a SOIL image deck, pure-image teaching slides, NotebookLM-style educational slides, a YAML-driven SOIL deck, visual-impact teacher training slides, or says「做全圖教學簡報」、「用 soil-image-deck 做簡報」、「做 NotebookLM 風格圖片投影片」.
 ---
 
 # SOIL Image Deck

@@ -1,6 +1,6 @@
 ---
 name: soil-html-deck
-description: Create YAML-driven SOIL interactive HTML presentations as portable single-file web decks. Use when the user asks for an HTML deck, interactive slides, a web presentation, a SOIL Image Deck upgraded with interaction, clickable teaching diagrams, responsive presentation pages, sortable tables, charts, decision trees, steppers, quizzes, or a presentation that should preserve SOIL visual rules while adding native HTML/CSS/JS behavior.
+description: Create YAML-driven SOIL interactive HTML presentations as portable single-file web decks (SOIL 互動網頁教學簡報技能，產出單一離線可開啟的 .html 互動投影片). Use when the user asks for an HTML deck, interactive slides, a web presentation, a SOIL Image Deck upgraded with interaction, clickable teaching diagrams, responsive presentation pages, sortable tables, charts, decision trees, steppers, quizzes, or says「做互動網頁簡報」、「用 soil-html-deck 做投影片」、「做可點擊的 HTML 教學投影片」.
 ---
 
 # SOIL Interactive HTML Deck
