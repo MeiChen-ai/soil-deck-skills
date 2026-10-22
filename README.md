@@ -47,7 +47,19 @@ flowchart LR
 
 ---
 
-### 三、 Step 1：如何安裝？（只需做一次，支援 Antigravity / OpenCode / Claude Code / Codex）
+### 三、 Step 0：先建一個專案資料夾（每份簡報一個）
+
+安裝技能只要做一次，在哪裡裝都一樣；但**製作簡報時，AI 只讀得到你目前打開的資料夾**，做出來的 `.html`、`.pptx` 也會存在這個資料夾裡。所以開始做簡報之前，請先：
+
+1. 在桌面建立一個**英文名稱、沒有空格**的資料夾，例如 `Week12_Deck`（整個路徑最好也不要有中文）。如果要改造現有的 `.pptx`（範本 3），先把它**複製**一份放進去。
+2. 用 AI Agent 打開這個資料夾：**Antigravity** 用 **New Project** 選這個資料夾；**OpenCode** 在這個資料夾裡啟動。
+3. 開一個**新對話**，再進行下面的安裝與製作。
+
+做完後，簡報檔都在這個資料夾裡，交作業時直接從這裡拿。
+
+---
+
+### 四、 Step 1：如何安裝？（只需做一次，支援 Antigravity / OpenCode / Claude Code / Codex）
 
 你**完全不需要自己開終端機找資料夾路徑**！只要打開你正在使用的 AI Agent（**Google Antigravity** 或 **OpenCode**），複製下方對應的一段話貼進對話框，AI 就會自動幫你把 3 個技能全部安裝好。
 
@@ -71,7 +83,7 @@ flowchart LR
 
 ---
 
-### 四、 Step 2：裝好後怎麼確認與呼叫？
+### 五、 Step 2：裝好後怎麼確認與呼叫？
 
 1. **在 Google Antigravity 中**：
    * 安裝完成後，請**開啟一個新的對話視窗（New Conversation）**。
@@ -81,7 +93,7 @@ flowchart LR
 
 ---
 
-### 五、 Step 3：課堂實戰 Prompt 範本（直接複製修改 `【...】` 即可使用）
+### 六、 Step 3：課堂實戰 Prompt 範本（直接複製修改 `【...】` 即可使用）
 
 #### 📋 範本 1：用 `soil-html-deck` 製作「可點擊互動的 HTML 微學習投影片」
 > **適用情境**：把你的語言教學主題（單字、文法、語用、閱讀策略）做成一份在瀏覽器打開就能點擊互動的 `.html` 教學簡報。
@@ -131,7 +143,7 @@ flowchart LR
 
 ---
 
-### 六、 常見問題與小撇步（FAQ）
+### 七、 常見問題與小撇步（FAQ）
 
 * **Q1：我可以用英文跟這套 Skill 對話嗎？做出來的簡報可以是全英文嗎？**
   * **完全可以！** 這 3 個技能都支援中文與英文指令。你想讓 AI 用中文還是英文跟你討論，就用該語言發問；並在 Prompt 裡註明「投影片畫面文字請用全英文（Slide copy in English）」即可。
@@ -181,7 +193,19 @@ Installing this repository gives your AI Agent **3 specialized SOIL presentation
 
 ---
 
-### 3. Step 1: One-Time Installation (Supports Antigravity, OpenCode, Claude Code & Codex)
+### 3. Step 0: Make a Project Folder First (One Folder per Deck)
+
+You install the skills only once, and it does not matter which folder you are in. But **when you make a deck, the AI can only read the folder you have open**, and it saves the `.html` or `.pptx` file there. So before you make a deck:
+
+1. On your desktop, create a folder with an **English name and no spaces**, e.g. `Week12_Deck` (avoid Chinese characters anywhere in the path). To redesign an existing `.pptx` (Template 3), **copy** it into this folder first.
+2. Open this folder in your AI agent: in **Antigravity**, use **New Project** and choose this folder; in **OpenCode**, start it inside this folder.
+3. Start a **new chat**, then install and build as described below.
+
+When you finish, your deck files are in this folder, ready to submit.
+
+---
+
+### 4. Step 1: One-Time Installation (Supports Antigravity, OpenCode, Claude Code & Codex)
 
 You do **not** need to manually locate any hidden folders! Just open your AI Agent (**Google Antigravity** or **OpenCode**), copy one of the blocks below, and paste it directly into the chat box.
 
@@ -205,7 +229,7 @@ Please clone https://github.com/MeiChen-ai/soil-deck-skills.git and copy the thr
 
 ---
 
-### 4. Step 2: How to Verify & Trigger the Skills
+### 5. Step 2: How to Verify & Trigger the Skills
 
 1. **In Google Antigravity**:
    * After installation, **start a new conversation**.
@@ -215,7 +239,7 @@ Please clone https://github.com/MeiChen-ai/soil-deck-skills.git and copy the thr
 
 ---
 
-### 5. Step 3: Ready-to-Use Classroom Prompt Templates
+### 6. Step 3: Ready-to-Use Classroom Prompt Templates
 
 #### 📋 Template 1: Build an Interactive Single-File `.html` Microlearning Deck (`soil-html-deck`)
 > **Use Case**: Turn a language learning topic (vocabulary, grammar, pragmatics, or reading skills) into a browser-ready `.html` deck with click-to-reveal cards, steppers, and practice questions.
@@ -264,7 +288,7 @@ Please complete the SOIL concept and page plan, generate the YAML spec, and show
 
 ---
 
-### 6. Repository Structure & Credits
+### 7. Repository Structure & Credits
 
 ```text
 soil-deck-skills/
