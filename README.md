@@ -142,17 +142,6 @@ flowchart LR
 ```
 
 ---
-
-### 七、 常見問題與小撇步（FAQ）
-
-* **Q1：我可以用英文跟這套 Skill 對話嗎？做出來的簡報可以是全英文嗎？**
-  * **完全可以！** 這 3 個技能都支援中文與英文指令。你想讓 AI 用中文還是英文跟你討論，就用該語言發問；並在 Prompt 裡註明「投影片畫面文字請用全英文（Slide copy in English）」即可。
-* **Q2：使用 `soil-teaching-deck` 生成 `.pptx` 時，如果電腦還沒裝 `pptxgenjs` 怎麼辦？**
-  * 不用擔心！直接跟你的 AI Agent 說：**「如果缺少套件，請自動幫我執行 `npm install pptxgenjs`」**，Agent 就會自己安裝並產出 `.pptx` 檔案。
-* **Q3：做好的 `soil-html-deck` 互動網頁簡報，想要加上「英文語音旁白動畫」或轉成 MP4 影片怎麼做？**
-  * 可以搭配本課程另一套姊妹技能 👉 **[`MeiChen-ai/soil-motion-html-skill`](https://github.com/MeiChen-ai/soil-motion-html-skill)**，把做好的 HTML 投影片關鍵頁升級為「逐字對齊英文旁白動畫頁」並匯出 MP4＋SRT 字幕！
-
----
 ---
 
 ## 🇺🇸 Part 2: English Usage & Installation Guide
